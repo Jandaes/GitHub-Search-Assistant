@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN" data-color-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GitHub 搜索助手 · 本地预览</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: #ffffff; color: #1f2328; }
+  .gh-header { background: #24292f; color: #fff; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
+  .gh-logo { font-weight: 700; letter-spacing: .3px; display: flex; align-items: center; gap: 8px; }
+  .gh-logo svg { width: 26px; height: 26px; fill: #fff; }
+  .gh-search { flex: 1; max-width: 560px; }
+  .header-search-button {
+    width: 100%; text-align: left; cursor: pointer;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.25);
+    color: #d0d7de; border-radius: 8px; padding: 7px 12px; font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .header-search-button:hover { background: rgba(255,255,255,.15); }
+  .kbd { margin-left: auto; font: 11px ui-monospace, monospace; border: 1px solid rgba(255,255,255,.35); border-radius: 5px; padding: 1px 6px; }
+  .gh-nav { display: flex; gap: 18px; font-size: 13px; color: #d0d7de; }
+  main { max-width: 900px; margin: 48px auto; padding: 0 24px; }
+  h1 { font-size: 26px; }
+  .card { border: 1px solid #d1d9e0; border-radius: 12px; padding: 22px 26px; margin-top: 22px; background: #f6f8fa; }
+  .card h2 { margin-top: 0; font-size: 16px; }
+  code { font-family: ui-monospace, monospace; background: #eef1f4; padding: 1px 6px; border-radius: 5px; font-size: 12.5px; }
+  .pill { display:inline-block; background:#ddf4ff; color:#0969da; border-radius:999px; padding:2px 10px; font-size:12px; font-weight:600; margin-right:6px; }
+  .tip { color:#59636e; font-size:13px; }
+  @media (prefers-color-scheme: dark) {
+    body { background:#0d1117; color:#e6edf3; }
+    .card { background:#161b22; border-color:#30363d; }
+    code { background:#21262d; }
+    .tip { color:#9aa4af; }
+  }
+</style>
+</head>
+<body>
+  <div class="gh-header">
+    <div class="gh-logo">
+      <svg viewBox="0 0 24 24"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+      GitHub
+    </div>
+    <div class="gh-search">
+      <button class="header-search-button" aria-label="Search or jump to">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        Type <b style="font-weight:600">/</b> to search
+        <span class="kbd">Ctrl K</span>
+      </button>
+    </div>
+    <nav class="gh-nav"><span>Pull requests</span><span>Issues</span><span>Marketplace</span><span>Explore</span></nav>
+  </div>
+
+  <main>
+    <h1>GitHub 搜索助手 · 本地预览</h1>
+    <p class="tip">这是离线预览页，用于在不安装油猴的情况下体验面板。点击上方深色头部的搜索框，或按 <code>/</code> 键，或点击右下角蓝色悬浮按钮。</p>
+    <div class="card">
+      <h2>试试这些组合</h2>
+      <p><span class="pill">仓库</span> 关键词 <code>machine learning</code> + 语言 Python + Star &gt; 1000</p>
+      <p><span class="pill">代码</span> 关键词 <code>useEffect</code> + repo <code>facebook/react</code></p>
+      <p><span class="pill">Issues</span> 状态 open + 标签 <code>good first issue</code></p>
+      <p><span class="pill">Pull requests</span> is:pr + involves <code>@me</code></p>
+      <p class="tip">面板底部会实时显示最终查询语句，例如 <code>"machine learning" stars:&gt;1000 language:Python</code>。</p>
+    </div>
+  </main>
+
+  <!-- 直接加载构建产物，作为普通脚本运行 -->
+  <script src="../github-search-assistant.user.js"></script>
+</body>
+</html>

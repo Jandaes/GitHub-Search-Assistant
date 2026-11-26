@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Build / editor / OS artifacts
+.DS_Store
+*.zip
+*.log
+.env
+.env.*
+
+# Test coverage
+coverage/
