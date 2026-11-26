@@ -25,7 +25,7 @@ const version = pkg.version || '1.0.0';
 const banner = `// ==UserScript==
 // @name         GitHub 搜索助手 · 可视化高级搜索
 // @name:en      GitHub Search Assistant
-// @namespace    https://github.com/ghsa/github-search-assistant
+// @namespace    https://github.com/Jandaes/GitHub-Search-Assistant
 // @version      ${version}
 // @description  点击 GitHub 官方搜索框弹出可视化面板，按规则(仓库/代码/Issues/PR/用户/提交/话题等)组合 GitHub 搜索语法，只需输入搜索内容即可。
 // @description:en  Visual advanced search builder for GitHub: click the search box to compose GitHub search qualifiers visually.
