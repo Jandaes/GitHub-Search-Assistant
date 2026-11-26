@@ -61,7 +61,15 @@
 | 关键词右侧 `普通/精确/正则` | 切换该行关键词的匹配方式 |
 | 每条规则右侧「排除」 | 生成 `-规则`（代码搜索为 `NOT 规则`） |
 | 底部「手改」 | 直接编辑最终查询语句 |
-| 底部复制图标 | 复制查询语句 |
+| 底部「复制」 | 复制查询语句 |
+| 底部「查看官方语法文档 ↗」 | 打开官方语法文档（代码类型自动指向代码搜索语法） |
+
+### 搜索后再次打开会自动回填
+
+搜索完（URL 变成 `/search?q=...&type=...`）之后，**再点击 GitHub 顶部的搜索框**，面板会把你当前正在看的这次搜索**原样回填**到各控件里（关键词、语言、Star 数、时间、标签、排除项、排序等），可以在此基础上继续微调，而不用重新点一遍。
+
+- 由 `src/query-builder.js` 的 `parseQuery()` 解析 `?q=`：能识别的限定符填入对应控件，无法识别的部分原样保留在「手改 / 追加」中，**不会丢条件**。
+- 支持引号短语 `"a b"`、正则 `/…/`、`NOT`/`-` 排除、区间 `a..b`、`>=` 等写法。
 
 ## 🖼️ 本地预览（无需安装）
 
@@ -75,7 +83,7 @@
 src/
   styles.js         # Shadow DOM 内的 CSS（浅色/深色变量）
   qualifiers.js     # 各搜索类型 / 规则的数据定义（schema 见 SPEC.md）
-  query-builder.js  # 纯函数：state -> GitHub 查询语句 / URL（可单测）
+  query-builder.js  # 纯函数：state <-> GitHub 查询语句 / URL（含 parseQuery 反向解析）
   ui.js             # Shadow DOM 界面、交互、实时预览
   main.js           # 启动：拦截搜索框、/ 快捷键、悬浮按钮
 SPEC.md             # 数据 schema + 查询构建语义
@@ -89,7 +97,7 @@ test/               # node:test 单元测试 + jsdom DOM 冒烟测试
 npm install          # 安装开发依赖（jsdom，用于 DOM 冒烟测试）
 npm run build        # 生成 github-search-assistant.user.js 与 dist/ 版本
 npm run test:core    # 查询引擎单元测试
-npm test             # 单元测试 + 对抗测试 + DOM 冒烟测试（当前 62 项全绿）
+npm test             # 单元 + 解析 + 对抗 + DOM 冒烟测试（当前 82 项全绿）
 node --check github-search-assistant.user.js  # 语法检查
 ```
 

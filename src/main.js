@@ -60,16 +60,23 @@
     return null;
   }
 
+  // Read the search the user is currently looking at, so clicking GitHub's
+  // search box re-opens the panel filled in with exactly those conditions.
   function currentPrefill() {
     try {
       const u = new URL(window.location.href);
-      if (u.pathname !== '/search') return {};
-      const t = u.searchParams.get('type');
       const out = {};
-      // Only carry the search *type* over; the raw ?q= is intentionally NOT
-      // pre-filled into the builder (editing fields would otherwise silently
-      // discard it). Use the "手改" (manual) mode to work on a raw query.
+      const t = u.searchParams.get('type');
       if (t && TYPE_PARAM_MAP[t]) out.type = TYPE_PARAM_MAP[t];
+      if (u.pathname === '/search') {
+        const q = u.searchParams.get('q');
+        if (q) out.query = q;
+        // keep the chosen sort so the panel reflects what is displayed
+        const sortParam = (window.__GHSA__ && window.__GHSA__.sortParamFor)
+          ? window.__GHSA__.sortParamFor(out.type || 'repositories') : 's';
+        const sv = u.searchParams.get(sortParam);
+        if (sv) out.sort = sv;
+      }
       return out;
     } catch (e) { return {}; }
   }

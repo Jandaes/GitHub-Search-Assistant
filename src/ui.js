@@ -624,28 +624,48 @@ export function mountAssistant(options) {
     }
     if (!overlayEl) buildSkeleton();
     if (opts.type && SEARCH_TYPE_MAP[opts.type]) activeTypeId = opts.type;
-    const st = state();
-    if (opts.query) {
-      st.manual = String(opts.query);
-      st.rawOpen = true;
-    } else {
-      // A fresh open must not keep a stale manual edit or raw editor.
-      if ('manual' in st) st.manual = null;
-      st.rawOpen = false;
-    }
     returnFocus = document.activeElement;
+
+    // Re-populate from an existing query: either the one we were handed (the
+    // current /search?q=... URL) or a raw query in "手改" mode.
+    if (opts.query) {
+      states.set(activeTypeId, restoreState(typeDef(), String(opts.query)));
+    } else if (opts.fresh) {
+      states.set(activeTypeId, createState());
+    }
+    const st = state();
+    if (opts.sort) st.sort = String(opts.sort);
     setType(activeTypeId);
     overlayEl.style.display = 'flex';
     openFlag = true;
     launcherEl.classList.add('ghsa-hidden');
     if (rawEl && st.manual != null) rawEl.value = st.manual;
     updatePreview();
+    if (opts.query) flashRestored();
     setTimeout(() => {
       const s = state();
       // Never steal focus away from an open raw editor / active manual edit.
       if (s.rawOpen) { if (rawEl) rawEl.focus(); }
       else if (s.manual == null) focusFirstKeyword();
     }, 0);
+  }
+
+  // Turn a query string into structured state; keep it raw-editable too so a
+  // user can still see/edit the exact text they arrived with.
+  function restoreState(td, query) {
+    const parsed = parseQuery(td, query);
+    parsed.rawOpen = false;
+    return parsed;
+  }
+
+  // Brief confirmation that the current search was pulled into the form.
+  function flashRestored() {
+    if (!bodyEl) return;
+    const old = bodyEl.querySelector('.ghsa-restored');
+    if (old) old.remove();
+    const note = h('div', { class: 'ghsa-restored', role: 'status' }, ['已回填当前搜索条件，可继续调整']);
+    bodyEl.insertBefore(note, bodyEl.firstChild);
+    setTimeout(() => { if (note.parentNode) note.remove(); }, 3200);
   }
 
   function close() {
@@ -681,6 +701,11 @@ export function mountAssistant(options) {
     open, close, toggle,
     isOpen: () => openFlag,
     setType,
+    sortParamFor: (typeId) => {
+      const t = SEARCH_TYPE_MAP[typeId];
+      return (t && t.sort && t.sort.param) ? t.sort.param : 's';
+    },
+    getQuery,
     host,
     destroy() {
       document.removeEventListener('keydown', onKeydown, true);

@@ -120,6 +120,17 @@ export const CSS = `
 .ghsa-body::-webkit-scrollbar, .ghsa-tabs::-webkit-scrollbar { height: 8px; width: 8px; }
 .ghsa-body::-webkit-scrollbar-thumb, .ghsa-tabs::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 8px; }
 
+/* restored-from-URL hint */
+.ghsa-restored {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 12px; padding: 8px 12px;
+  font-size: 12px; font-weight: 550;
+  color: var(--accent); background: var(--accent-soft);
+  border: 1px solid transparent; border-radius: var(--radius-xs);
+  animation: ghsa-fade 160ms ease-out;
+}
+.ghsa-restored::before { content: '✓'; font-weight: 700; }
+
 /* keyword area */
 .ghsa-keywords {
   border: 1px solid var(--border); border-radius: var(--radius-sm);

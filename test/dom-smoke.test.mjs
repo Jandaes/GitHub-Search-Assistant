@@ -207,3 +207,61 @@ test('Escape still closes the panel from inside a field', () => {
   kw.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true, composed: true }));
   assert.equal(shadow.querySelector('.ghsa-overlay').style.display, 'none', 'Escape closes');
 });
+
+test('clicking the search box on /search?q=... refills the panel fields', () => {
+  const dom = makeDom();
+  const { window } = dom;
+  window.history.replaceState({}, '',
+    '/search?q=' + encodeURIComponent('"machine learning" stars:>1000 language:Python -license:gpl-3.0 in:name,description')
+    + '&type=repositories&s=stars&o=desc');
+  window.eval(code);
+  const shadow = openViaHeader(window);
+  const preview = shadow.querySelector('.ghsa-preview-code').textContent;
+  assert.match(preview, /machine learning/);
+  assert.match(preview, /stars:>1000/);
+  assert.match(preview, /language:Python/);
+  assert.match(preview, /-license:gpl-3\.0/);
+  // structured fields really are populated (not just raw text)
+  assert.equal(shadow.querySelector('.ghsa-kw-input').value, 'machine learning');
+  const lang = [...shadow.querySelectorAll('.ghsa-field')]
+    .find((f) => /language:/.test(f.querySelector('.ghsa-field-label').textContent));
+  assert.equal(lang.querySelector('input').value, 'Python');
+  assert.ok(shadow.querySelector('.ghsa-negate.on'), 'negation restored');
+  assert.equal(shadow.querySelector('.ghsa-sort-row select').value, 'stars');
+});
+
+test('refill switches to the right tab from ?type=', () => {
+  const dom = makeDom();
+  const { window } = dom;
+  window.history.replaceState({}, '', '/search?q=' + encodeURIComponent('useEffect repo:facebook/react') + '&type=code');
+  window.eval(code);
+  const shadow = openViaHeader(window);
+  assert.match(shadow.querySelector('.ghsa-tab.active').textContent, /代码/);
+  assert.match(shadow.querySelector('.ghsa-preview-code').textContent, /repo:facebook\/react/);
+});
+
+test('opening on a plain page (no ?q=) still starts empty', () => {
+  const dom = makeDom();
+  const { window } = dom;
+  window.eval(code);
+  const shadow = openViaHeader(window);
+  assert.equal(shadow.querySelector('.ghsa-kw-input').value, '');
+  assert.match(shadow.querySelector('.ghsa-preview-code').textContent, /在下方选择规则/);
+});
+
+test('after refill, editing a field keeps the parsed values and updates the query', () => {
+  const dom = makeDom();
+  const { window } = dom;
+  window.history.replaceState({}, '', '/search?q=' + encodeURIComponent('cats stars:>100') + '&type=repositories');
+  window.eval(code);
+  const shadow = openViaHeader(window);
+  const stars = [...shadow.querySelectorAll('.ghsa-field')]
+    .find((f) => /stars:/.test(f.querySelector('.ghsa-field-label').textContent));
+  const num = stars.querySelector('input[type="number"]');
+  assert.equal(num.value, '100');
+  num.value = '500';
+  num.dispatchEvent(new window.Event('input', { bubbles: true }));
+  const preview = shadow.querySelector('.ghsa-preview-code').textContent;
+  assert.match(preview, /stars:>500/);
+  assert.match(preview, /cats/, 'keyword from the URL is preserved');
+});

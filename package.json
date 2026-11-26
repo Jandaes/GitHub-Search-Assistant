@@ -6,9 +6,10 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "test": "node --test test/query-builder.test.mjs test/adversarial.test.mjs test/dom-smoke.test.mjs",
+    "test": "node --test test/query-builder.test.mjs test/parse.test.mjs test/adversarial.test.mjs test/dom-smoke.test.mjs",
     "test:core": "node --test test/query-builder.test.mjs",
-    "test:dom": "node --test test/dom-smoke.test.mjs"
+    "test:dom": "node --test test/dom-smoke.test.mjs",
+    "test:parse": "node --test test/parse.test.mjs"
   },
   "devDependencies": {
     "jsdom": "^31.0.1"
